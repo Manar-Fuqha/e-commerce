@@ -1,13 +1,21 @@
 import { Box, Typography ,TextField, Container, Button } from '@mui/material'
 import { useForm } from "react-hook-form"
 import axios from 'axios'
+import {yupResolver } from "@hookform/resolvers/yup"
+import { RegisterSchema } from '../../validations/RegisterSchema'
+
+
 
 export default function Register() {
 
-  const {register , handleSubmit} =useForm({})
+
+  const {register , handleSubmit , formState:{errors}} =useForm({
+    resolver:yupResolver(RegisterSchema),
+    mode:'onBlur'
+  })
 
   const registerForm = async(values)=>{
-
+ 
     try{
       const response = await axios.post(`https://knowledgeshop.runasp.net/api/Auth/Account/Register`,values);
     }
@@ -22,11 +30,16 @@ export default function Register() {
 
       <Container maxWidth="sm">
       <Box onSubmit={handleSubmit(registerForm)} component={"form"} sx={{display:'flex',gap:'20px' , flexDirection:'column'}}>
-      <TextField {...register('fullName')}  label="Full Name" variant="outlined" />
-      <TextField {...register('userName')}  label="User Name" variant="outlined" />
-      <TextField {...register('email')}  label="Email" variant="outlined" />
-      <TextField {...register('password')}  label="Password" variant="outlined" />
-      <TextField {...register('phoneNumber')}  label="Phone Number" variant="outlined" />
+      <TextField {...register('fullName')}  label="Full Name" variant="outlined" 
+      error={errors.fullName} helperText={errors.fullName?.message}/>
+      <TextField {...register('userName')}  label="User Name" variant="outlined"
+      error={errors.userName} helperText={errors.userName?.message}/>
+      <TextField {...register('email')}  label="Email" variant="outlined"
+      error={errors.email} helperText={errors.email?.message}/>
+      <TextField {...register('password')}  label="Password" variant="outlined"
+      error={errors.password} helperText={errors.password?.message}/>
+      <TextField {...register('phoneNumber')}  label="Phone Number" variant="outlined" 
+      error={errors.phoneNumber} helperText={errors.phoneNumber?.message}/>
       <Button sx={{m:'auto', width:'fit-content'}} type='submit' variant="contained">Create</Button>
       </Box>
     </Container>
