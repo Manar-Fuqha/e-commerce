@@ -27,7 +27,7 @@ export default function Login() {
         <TextField {...register('email')}  label="Email" variant="outlined" />
         
         <TextField {...register('password')}  label="Password" variant="outlined" />
-      <Link href="#" sx={{m:'auto',fontWeight:'400' , fontFamily:"Helvetica, Arial, sans-serif" , pt:'10px' , textDecoration:'none' , color:'#606060' , cursor:'pointer'}}>Forgot your password?</Link>
+      <Link href="/auth/sendCode" sx={{m:'auto',fontWeight:'400' , fontFamily:"Helvetica, Arial, sans-serif" , pt:'10px' , textDecoration:'none' , color:'#606060' , cursor:'pointer'}}>Forgot your password?</Link>
         
         <Button sx={{m:'auto', width:'fit-content'}} type='submit' variant="contained">Sign In</Button>
       <Link href="/auth/register" sx={{m:'auto',fontWeight:'400' , fontFamily:"Helvetica, Arial, sans-serif" , py:'10px' , textDecoration:'none' , color:'#606060' , cursor:'pointer'}}>Create account</Link>
