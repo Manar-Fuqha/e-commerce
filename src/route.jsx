@@ -5,6 +5,7 @@ import Cart from "./pages/cart/Cart";
 import AuthLayout from "./layout/AuthLayout";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
+import SendCode from "./pages/sendCode/SendCode";
 
 
 const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
         {
             path:'register',
             element:<Register />
+        },
+        {
+            path:'sendCode',
+            element:<SendCode />
         },
     ],
   },
