@@ -3,12 +3,13 @@ import { useForm } from "react-hook-form"
 import axios from 'axios'
 import {yupResolver } from "@hookform/resolvers/yup"
 import { RegisterSchema } from '../../validations/RegisterSchema'
+import { useState } from 'react'
 
 
 
 export default function Register() {
 
-
+  const [serverErrors, setServerErrors] =useState([]);
   const {register , handleSubmit , formState:{errors}} =useForm({
     resolver:yupResolver(RegisterSchema),
     mode:'onBlur'
@@ -20,7 +21,8 @@ export default function Register() {
       const response = await axios.post(`https://knowledgeshop.runasp.net/api/Auth/Account/Register`,values);
     }
     catch(err){
-      ;console.log(err.response?.data)
+      console.log(err.response?.data);
+      setServerErrors(err.response.data.errors);
     }
   }
 
@@ -29,6 +31,11 @@ export default function Register() {
       <Typography sx={{ m:'auto' , fontWeight:'bold' , pb:'50px'}} variant='h3' component="h1">Create Account</Typography>
 
       <Container maxWidth="sm">
+        {serverErrors.length >0 ?
+        serverErrors.map( (err)=>
+          <Typography sx={{color:"red" , pb:'20px'}}>{err}</Typography>
+        )
+        :null}
       <Box onSubmit={handleSubmit(registerForm)} component={"form"} sx={{display:'flex',gap:'20px' , flexDirection:'column'}}>
       <TextField {...register('fullName')}  label="Full Name" variant="outlined" 
       error={errors.fullName} helperText={errors.fullName?.message}/>
