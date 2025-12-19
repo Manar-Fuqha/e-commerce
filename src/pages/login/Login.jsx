@@ -1,9 +1,14 @@
 import { Box, Typography ,TextField, Container, Button, Link } from '@mui/material'
 import { useForm } from "react-hook-form"
 import axios from 'axios'
+import {yupResolver } from "@hookform/resolvers/yup"
+import { LoginSchema } from '../../validations/LoginSchema'
 
 export default function Login() {
-  const {register , handleSubmit} =useForm({})
+  const {register , handleSubmit , formState:{errors}} =useForm({
+    resolver:yupResolver(LoginSchema),
+    mode:'onBlur'
+  })
   
     const loginForm = async(values)=>{
   
@@ -24,9 +29,11 @@ export default function Login() {
   
         <Container maxWidth="sm">
         <Box onSubmit={handleSubmit(loginForm)} component={"form"} sx={{display:'flex',gap:'20px' , flexDirection:'column'}}>
-        <TextField {...register('email')}  label="Email" variant="outlined" />
+        <TextField {...register('email')}  label="Email" variant="outlined" 
+        error={errors.email} helperText={errors.email?.message}/>
         
-        <TextField {...register('password')}  label="Password" variant="outlined" />
+        <TextField {...register('password')}  label="Password" variant="outlined" 
+        error={errors.password} helperText={errors.password?.message}/>
       <Link href="/auth/sendCode" sx={{m:'auto',fontWeight:'400' , fontFamily:"Helvetica, Arial, sans-serif" , pt:'10px' , textDecoration:'none' , color:'#606060' , cursor:'pointer'}}>Forgot your password?</Link>
         
         <Button sx={{m:'auto', width:'fit-content'}} type='submit' variant="contained">Sign In</Button>
