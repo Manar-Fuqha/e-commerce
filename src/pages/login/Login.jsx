@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form"
 import axios from 'axios'
 import {yupResolver } from "@hookform/resolvers/yup"
 import { LoginSchema } from '../../validations/LoginSchema'
+import { useState } from 'react'
 
 export default function Login() {
+  const [serverErrors, setServerErrors] =useState([]);
   const {register , handleSubmit , formState:{errors}} =useForm({
     resolver:yupResolver(LoginSchema),
     mode:'onBlur'
@@ -19,7 +21,8 @@ export default function Login() {
         }
       }
       catch(err){
-        ;console.log(err)
+        console.log(err)
+        setServerErrors([err.response.data.message])
       }
     }
   
@@ -28,6 +31,11 @@ export default function Login() {
         <Typography sx={{ m:'auto' , fontWeight:'bold' , pb:'50px', color:'#3a3a3a'}} variant='h3' component="h1">Login</Typography>
   
         <Container maxWidth="sm">
+          {serverErrors.length >0 ?
+                serverErrors.map( (err)=>
+                <Typography sx={{color:"red"  , fontWeight:'bold' , py:'20px'}}>{err}</Typography>
+                )
+                :null}
         <Box onSubmit={handleSubmit(loginForm)} component={"form"} sx={{display:'flex',gap:'20px' , flexDirection:'column'}}>
         <TextField {...register('email')}  label="Email" variant="outlined" 
         error={errors.email} helperText={errors.email?.message}/>

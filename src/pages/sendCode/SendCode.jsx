@@ -32,7 +32,7 @@ export default function SendCode() {
         <Container maxWidth='sm'>
             {serverErrors.length >0 ?
                 serverErrors.map( (err)=>
-                <Typography sx={{color:"red"  , fontWeight:'bold' , y:'20px'}}>{err}</Typography>
+                <Typography sx={{color:"red"  , fontWeight:'bold' , py:'20px'}}>{err}</Typography>
                 )
                 :null}
             <Box onSubmit={handleSubmit(sendCodeForm)}  component={'form'} sx={{pt:'20px' }}>
