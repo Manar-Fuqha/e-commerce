@@ -1,28 +1,33 @@
+
 import { Box, Button, Container, Link, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form"
 import axios from "axios";
-import { SendCodeSchema } from "../../validations/SendCodeSchema";
 import {yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react";
+import { ResetPassSchema } from "../../validations/resetPassSchema";
 import { useNavigate } from "react-router-dom";
 
 
-
-export default function SendCode() {
+export default function ResetPassword() {
     const navigate = useNavigate();
     const [serverErrors, setServerErrors] =useState([]);
     const {register , handleSubmit , formState:{errors}} =useForm({
-        resolver:yupResolver(SendCodeSchema),
+        resolver:yupResolver(ResetPassSchema),
         mode:'onBlur'
       })
-    const sendCodeForm =async(values)=>{
+    const setPassForm =async(values)=>{
+         const email = localStorage.getItem("email");
         try{
-           const response= await axios.post(`https://knowledgeshop.runasp.net/api/Auth/Account/SendCode`,values);
+           const response= await axios.patch(`https://knowledgeshop.runasp.net/api/Auth/Account/ResetPassword`,{
+            newPassword: values.newPassword,
+            code: values.code,
+            email: email,
+           });
            console.log(response.data.message);
 
-           if (response.data.success) {
-             navigate("/auth/resetPassword");
-             localStorage.setItem("email",values.email);
+            if (response.data.success) {
+             navigate("/auth/login");
+             localStorage.removeItem("email");
             }
         }
         catch(err){
@@ -33,8 +38,8 @@ export default function SendCode() {
 
   return (
     <Box sx={{display:'flex' , flexDirection:'column' , alignItems:'center' ,justifyContent:'center' , minHeight:'100vh' }}>
-        <Typography sx={{ textTransform: "uppercase" , color:'#3a3a3a'}}  component="h1">Reset your password</Typography>
-        <Typography sx={{pt:'20px' ,color:'#3a3a3a' , fontSize:'18px', fontWeight:'400' , fontFamily:'Helvetica,Arial,sans-serif'}}  component={"p"}>We will send you an email to reset your password.</Typography>
+        <Typography sx={{ textTransform: "uppercase" , fontWeight:'bold' , color:'#3a3a3a'}}  component="h1">Add New password</Typography>
+        
         
         <Container maxWidth='sm'>
             {serverErrors.length >0 ?
@@ -42,16 +47,18 @@ export default function SendCode() {
                 <Typography sx={{color:"red"  , fontWeight:'bold' , py:'20px'}}>{err}</Typography>
                 )
                 :null}
-            <Box onSubmit={handleSubmit(sendCodeForm)}  component={'form'} sx={{pt:'20px' }}>
-                <TextField {...register('email')}  label="Email" fullWidth variant="outlined" 
-                error={errors.email} helperText={errors.email?.message}/>
+            <Box onSubmit={handleSubmit(setPassForm)}  component={'form'} sx={{pt:'20px' , display:'flex' , flexDirection:'column' , gap:'10px' }}>
+                <TextField {...register('newPassword')}  label="New Password" fullWidth variant="outlined" 
+                error={errors.newPassword} helperText={errors.newPassword?.message}/>
+                <TextField {...register('code')}  label="Your Code" fullWidth variant="outlined" 
+                error={errors.code} helperText={errors.code?.message}/>
                 <Button type='submit' variant="contained" sx={{p:'12px', backgroundColor:'#3a3a3a',textTransform:'uppercase' , mt:'20px' , display:'flex' , alignItems:'center' , mx:'auto' , letterSpacing:'3px'}}>submit</Button>
 
             </Box>
            
         
         </Container>
-         <Link href="/auth/login" sx={{color:'#3a3a3a' , textDecoration:'none' , mt:'25px' , fontSize:'20px'}}>Cancel</Link>
+         <Link href="/auth/sendCode" sx={{color:'#3a3a3a' , textDecoration:'none' , mt:'25px' , fontSize:'20px'}}>Cancel</Link>
     
     </Box>
   )

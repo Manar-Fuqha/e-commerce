@@ -6,6 +6,7 @@ import AuthLayout from "./layout/AuthLayout";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import SendCode from "./pages/sendCode/SendCode";
+import ResetPassword from "./pages/forgetPassword/ResetPassword";
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
         {
             path:'sendCode',
             element:<SendCode />
+        },
+        {
+            path:'resetPassword',
+            element:<ResetPassword />
         },
     ],
   },
