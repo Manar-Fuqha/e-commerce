@@ -4,6 +4,7 @@ import axios from 'axios'
 import {yupResolver } from "@hookform/resolvers/yup"
 import { LoginSchema } from '../../validations/LoginSchema'
 import { useState } from 'react'
+import axiosInstance from '../../Api/axiosInstance'
 
 export default function Login() {
   const [serverErrors, setServerErrors] =useState([]);
@@ -15,7 +16,7 @@ export default function Login() {
     const loginForm = async(values)=>{
   
       try{
-        const response = await axios.post(`https://knowledgeshop.runasp.net/api/Auth/Account/Login`,values);
+        const response = await axiosInstance.post(`/Auth/Account/Login`,values);
         if(response.status ===200){
           localStorage.setItem("token",response.data.accessToken)
         }
