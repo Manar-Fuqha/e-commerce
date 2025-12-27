@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../Api/axiosInstance';
-import { Box, Grid ,Card, Typography, Container } from '@mui/material';
+import { Box, Grid ,Card, Typography, Container, CircularProgress } from '@mui/material';
+import {useQuery} from '@tanstack/react-query'
+import { useCategories } from '../../hooks/useCategories';
 
 export default function Categories() {
 
-    const [categories , setCategories] = useState([]);
+     
+    const {isLoading,isError,data} = useCategories();
 
-    const getCategories= async ()=>{
-        try{
-            const response = await axiosInstance.get('/Categories');
-            console.log(response);
-            setCategories(response.data.response);
-        }
-        catch(err){
-            console.log(err)
-        }
-    }
+    if(isLoading) return <CircularProgress></CircularProgress>
+    if(isError) return <Typography>Error...</Typography>
 
-    useEffect(()=>{
-        getCategories();
-    } , [])
+
 
   return (
     <>
@@ -29,7 +22,7 @@ export default function Categories() {
     <Container maxWidth='lg'>
         <Typography sx={{display:'flex' , justifyContent:'center'}} variant='h4' component={'h2'}>Categories</Typography>
         <Grid container spacing={3}>
-            {categories.map((category) => (
+            {data.map((category) => (
             <Grid item size={{ xs: 12, sm:6 ,md: 4 ,lg:3 }}key={category.id}>
         <Card
           sx={{ p: 3, border: '1px solid black', textAlign: 'center' }}
